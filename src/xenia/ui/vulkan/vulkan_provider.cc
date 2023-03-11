@@ -1039,12 +1039,11 @@ bool VulkanProvider::Initialize() {
   // Report device information after verifying that extension function pointers
   // could be obtained.
   XELOGVK(
-      "Vulkan device: {} Type: {} (vendor {:04X}, device {:04X}, driver "
+      "Vulkan device: {} (vendor {:04X}, device {:04X}, driver "
       "{:08X}, API"
       "{}.{}.{})",
-      device_properties_.deviceName, device_properties_.deviceType,
-      device_properties_.vendorID, device_properties_.deviceID,
-      device_properties_.driverVersion,
+      device_properties_.deviceName, device_properties_.vendorID,
+      device_properties_.deviceID, device_properties_.driverVersion,
       VK_VERSION_MAJOR(device_properties_.apiVersion),
       VK_VERSION_MINOR(device_properties_.apiVersion),
       VK_VERSION_PATCH(device_properties_.apiVersion));
