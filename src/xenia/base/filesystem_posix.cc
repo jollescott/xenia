@@ -217,9 +217,16 @@ std::vector<FileInfo> ListFiles(const std::filesystem::path& path) {
   }
 
   while (auto ent = readdir(dir)) {
+    if (ent->d_name[0] == '.') {
+      // Filter out Linux '.' & '..' folders which cause a endless
+      // loop of loading directories.
+      continue;
+    }
+
     FileInfo info;
 
     info.name = ent->d_name;
+
     struct stat st;
     stat((path / info.name).c_str(), &st);
     info.create_timestamp = convertUnixtimeToWinFiletime(st.st_ctime);
