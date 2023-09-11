@@ -217,9 +217,7 @@ std::vector<FileInfo> ListFiles(const std::filesystem::path& path) {
   }
 
   while (auto ent = readdir(dir)) {
-    if (ent->d_name[0] == '.') {
-      // Filter out Linux '.' & '..' folders which cause a endless
-      // loop of loading directories.
+    if (strcmp(ent->d_name, ".") == 0 || strcmp(ent->d_name, "..") == 0) {
       continue;
     }
 
@@ -232,6 +230,7 @@ std::vector<FileInfo> ListFiles(const std::filesystem::path& path) {
     info.create_timestamp = convertUnixtimeToWinFiletime(st.st_ctime);
     info.access_timestamp = convertUnixtimeToWinFiletime(st.st_atime);
     info.write_timestamp = convertUnixtimeToWinFiletime(st.st_mtime);
+    info.path = path;
     if (ent->d_type == DT_DIR) {
       info.type = FileInfo::Type::kDirectory;
       info.total_size = 0;
@@ -241,7 +240,7 @@ std::vector<FileInfo> ListFiles(const std::filesystem::path& path) {
     }
     result.push_back(info);
   }
-
+  closedir(dir);
   return result;
 }
 
