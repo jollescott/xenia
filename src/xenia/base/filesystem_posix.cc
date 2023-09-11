@@ -217,9 +217,7 @@ std::vector<FileInfo> ListFiles(const std::filesystem::path& path) {
   }
 
   while (auto ent = readdir(dir)) {
-    if (ent->d_name[0] == '.') {
-      // Filter out Linux '.' & '..' folders which cause a endless
-      // loop of loading directories.
+    if (strcmp(ent->d_name, ".") == 0 || strcmp(ent->d_name, "..") == 0) {
       continue;
     }
 
@@ -242,7 +240,7 @@ std::vector<FileInfo> ListFiles(const std::filesystem::path& path) {
     }
     result.push_back(info);
   }
-
+  closedir(dir);
   return result;
 }
 
